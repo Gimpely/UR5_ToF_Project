@@ -1,0 +1,10 @@
+<launch>
+    <node pkg="ur5-joint-position-control" name="lidar_scan_A1" type="lidar_scan_A1.py"  output="screen"> </node>
+    <node pkg="ur5-joint-position-control" name="lidar_scan_A2" type="lidar_scan_A2.py"  output="screen"> </node>
+    <node pkg="ur5-joint-position-control" name="lidar_scan_B1" type="lidar_scan_B1.py"  output="screen"> </node>
+    <node pkg="ur5-joint-position-control" name="lidar_scan_B2" type="lidar_scan_B2.py"  output="screen"> </node>
+    <node pkg="ur5-joint-position-control" name="lidar_scan_C1" type="lidar_scan_C1.py"  output="screen"> </node>
+    <node pkg="ur5-joint-position-control" name="lidar_scan_C2" type="lidar_scan_C2.py"  output="screen"> </node>
+    <node pkg="ur5-joint-position-control" name="lidar_scan_D1" type="lidar_scan_D1.py"  output="screen"> </node>
+    <node pkg="ur5-joint-position-control" name="lidar_scan_D2" type="lidar_scan_D2.py"  output="screen"> </node>
+</launch>

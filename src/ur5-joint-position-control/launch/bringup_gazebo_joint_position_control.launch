@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="ur5-joint-position-control"
+            type="bringup.sh" name="bringup"
+            output="screen"
+    />
+</launch>
