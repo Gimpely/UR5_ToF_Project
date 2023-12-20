@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="box">
+
+    <link name="box">
+        <inertial>
+            <origin xyz="0.5 -0.2 0" />
+            <mass value="1.0" />
+            <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="100.0"  iyz="0.0"  izz="1.0" />
+        </inertial> 
+        <visual>
+            <origin xyz="0.5 -0.2 0" />
+            <geometry>
+                <box size="0.15 0.15 0.15"/>
+                <!-- <mesh filename="tekociTrak.stl" scale="1 1 1"/> -->
+            </geometry>
+            <material name="red"/>
+        </visual>  
+        <collision>
+
+            <origin xyz="0.5 -0.2 0" />
+            <geometry>
+                <box size="0.15 0.15 0.15"/>
+                <!-- <mesh filename="tekociTrak.stl" scale="1 1 1"/> -->
+            </geometry>
+        </collision>   
+          
+    </link>
+
+    <gazebo reference="box">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/Black</material>
+    </gazebo>
+    
+      <!-- gazebo ros controller plugin /-->
+      <!-- this is defined in ur_description/urdf/common.gazebo.xacro file -->
+    
+
+
+</robot>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <joint name="test_joint" type="fixed">
+        <parent link="shoulder_pan_joint"/>
+        <child link="laser_frame_test"/>
+        <!--Set value z-->
+        <origin xyz="0.055 0.0 0.24" rpy="0 0 0"/>
+    </joint>
+
+    <link name="laser_frame_test">
+        <visual>
+            <geometry>
+                <box size="0.007 0.006  0.002"/>
+            </geometry>
+            <material name="red"/>
+        </visual>       
+    </link>
+
+
+
+    <gazebo reference="laser_frame_test">
+        <material>Gazebo/Red</material>
+
+         <sensor name="laser_test" type="ray">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                     <horizontal>
+                       
+                        <samples>16</samples>
+                        <min_angle>-0.235619</min_angle> 
+                        <max_angle>0.235619</max_angle>
+                    </horizontal> 
+                    <vertical>
+                       
+                        <samples>16</samples>
+                        <min_angle>-0.235619</min_angle> 
+                        <max_angle>0.235619</max_angle>
+                    </vertical>
+                </scan>
+                <range>
+                    <min>0.05</min>
+                    <max>2</max>
+                </range>
+            </ray>
+
+            <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
+                <ros>
+                    <argument>~/out:=scan</argument>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <topicName>laser_frame_test</topicName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+
+</robot>

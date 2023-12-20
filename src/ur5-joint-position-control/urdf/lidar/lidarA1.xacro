@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <joint name="laser_joint_A1" type="fixed">
+        <parent link="upper_arm_link"/>
+        <child link="laser_frame_A1"/>
+        <origin xyz="0.0515 0.0 0.09" rpy="0 -1.9634954085 3.1415926536"/>
+    </joint>
+
+    <link name="laser_frame_A1">
+        <visual>
+            <geometry>
+                <box size="0.00303 0.0064  0.001"/>
+            </geometry>
+            <material name="red"/>
+        </visual>        
+    </link>
+
+
+
+    <gazebo reference="laser_frame_A1">
+        <material>Gazebo/Red</material>
+
+         <sensor name="laser_A1" type="ray">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>false</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                     <horizontal>
+                        
+                        <samples>44</samples>
+                        <min_angle>-0.37505556</min_angle> 
+                        <max_angle>0.37505556</max_angle>
+                    </horizontal> 
+                    <vertical>
+                        
+                        <samples>44</samples>
+                        <min_angle>-0.37505556</min_angle> 
+                        <max_angle>0.37505556</max_angle>
+                    </vertical>
+                </scan>
+                <range>
+                    <min>0.05</min>
+                    <max>2</max>
+                </range>
+            </ray>
+
+            <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
+                <ros>
+                    <argument>~/out:=scan</argument>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <topicName>laser_frame_A1</topicName>
+            </plugin>
+        </sensor>
+    </gazebo>
+    <!-- <gazebo reference="laser_frame_A1">
+        <material>Gazebo/Red</material>
+
+         <sensor name="laser_A1" type="ray">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>false</visualize>
+            <update_rate>10</update_rate>
+           <sensor name="my_camera_sensor" update_rate="20">
+            <parent link="optical_frame_link_name"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <camera>
+                <image width="640" height="480" hfov="1.5708" format="RGB8" near="0.01" far="50.0"/>
+            </camera>
+        </sensor>
+
+            <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
+                <ros>
+                    <argument>~/out:=scan</argument>
+                </ros>
+                <output_type>sensor_msgs/Image</output_type>
+                <topicName>laser_frame_A1</topicName>
+            </plugin>
+        </sensor>
+    </gazebo> -->
+
+</robot>
