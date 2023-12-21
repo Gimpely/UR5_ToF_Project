@@ -39,7 +39,8 @@ def callback(B1):
         list = []
     arranged_array = arrange_4_4(samples,array)
     array_min = find_min(samples,arranged_array)
-    write_2_csv(array_min)
+    array_min_min = min(array_min)
+    write_2_csv(array_min_min)
     y_var.append(array_min)
     
     # print((float(time.time())-time_zero))
@@ -77,7 +78,7 @@ def find_min(samples,data):
 #Write to csv - change name
 def write_2_csv(data):
     cas = datetime.now()
-    with open("/home/student/UR_test_ws/src/ur5-joint-position-control/src/src/my_code/lidar_data/lidar_data_B1.csv",'a') as myfile:
+    with open("/home/student/Desktop/UR_test_ws/src/ur5-joint-position-control/src/src/my_code/lidar_data/lidar_data_B1.csv",'a') as myfile:
         writer = csv.writer(myfile)
         writer.writerow((cas,data))
 

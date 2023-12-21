@@ -11,7 +11,7 @@ import rospkg
 from datetime import datetime
 rospack = rospkg.RosPack()
 #pub = rospy.Publisher('/lidar_map', Float64MultiArray, queue_size=10)
-print('Datas are in meters.')
+print('Data is in meters.')
 
 global time_vec 
 global y_var 
@@ -38,10 +38,12 @@ def callback(A1):
         array.append(list)
         list = []
     arranged_array = arrange_4_4(samples,array)
-    print('arranged array:', (arranged_array))
+    # print('arranged array:', (arranged_array))
     
     array_min = find_min(samples,arranged_array)
-    write_2_csv(array_min)
+    #print(array_min)
+    array_min_min = min(array_min)
+    write_2_csv(array_min_min)
     #print(array_min)
     y_var.append(array_min)
     
@@ -79,10 +81,12 @@ def find_min(samples,data):
 
 #Write to csv - change name
 def write_2_csv(data):
+    print("writing")
     cas = datetime.now()
-    with open("/home/student/UR_test_ws/src/ur5-joint-position-control/src/src/my_code/lidar_data/lidar_data_A1.csv",'a') as myfile:
+    with open("/home/student/Desktop/UR_test_ws/src/ur5-joint-position-control/src/src/my_code/lidar_data/lidar_data_A1.csv",'a') as myfile:
         writer = csv.writer(myfile)
         writer.writerow((cas,data))
+
         
 
 # def arrange_chess(data):
