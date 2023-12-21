@@ -264,7 +264,7 @@
       </transmission>
   
   
-  <!-- <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarD1.xacro" /> -->
+  <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarD1.xacro" />
 <joint name="laser_joint_D1" type="fixed">
     <parent link="wrist_3_link"/>
     <child link="laser_frame_D1"/>
@@ -337,7 +337,7 @@
 
     <sensor name="laser_D2" type="ray">
         <pose> 0 0 0 0 0 0 </pose>
-        <visualize>false</visualize>
+        <visualize>true</visualize>
         <update_rate>100</update_rate>
         <ray> <horizontal>
                     <samples>27</samples>
@@ -366,10 +366,10 @@
         </plugin>
     </sensor>
 </gazebo> 
-  <!-- <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarC1.xacro" /> -->
+  <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarC1.xacro" />
   
 
-  <!-- <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarA2.xacro" /> -->
+  <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarA2.xacro" />
   <joint name="laser_joint_A2" type="fixed">
     <parent link="forearm_link"/>
     <child link="laser_frame_A2"/>
@@ -423,7 +423,7 @@
         </plugin>
     </sensor>
 </gazebo>
-  <!-- <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarB1.xacro" /> -->
+  <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarB1.xacro" />
   <joint name="laser_joint_B1" type="fixed">
     <parent link="wrist_3_link"/>
     <child link="laser_frame_B1"/>
@@ -477,7 +477,7 @@
         </plugin>
     </sensor>
 </gazebo>
-  <!-- <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarB2.xacro" />  -->
+  <xacro:include filename="$(find myur5_description)/urdf/lidar/lidarB2.xacro" /> 
 <joint name="laser_joint_B2" type="fixed">
     <parent link="wrist_3_link"/>
     <child link="laser_frame_B2"/>
@@ -605,7 +605,7 @@
 
   <sensor name="laser_C1" type="ray">
       <pose> 0 0 0 0 0 0 </pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>100</update_rate>
       <ray>
           <scan>
