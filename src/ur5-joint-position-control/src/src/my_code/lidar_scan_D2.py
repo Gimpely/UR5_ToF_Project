@@ -2,6 +2,8 @@
 import numpy as np
 import rospy
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Int32, Header
+from sensor_msgs.msg import Int32Stamped
 #from std_msgs.msg import String Float64MultiArray
 import time
 import csv
@@ -41,6 +43,12 @@ def callback(D2):
     array_min = find_min(samples,arranged_array)
     array_min_min = min(array_min)
     write_2_csv(array_min_min)
+    # Publish array_min_min on the B1_sim topic
+    msg = Int32Stamped()
+    msg.header = Header()
+    msg.header.stamp = rospy.Time.now()
+    msg.data = array_min_min
+    pub_D2_sim.publish(msg)
     y_var.append(array_min)
     
     # print((float(time.time())-time_zero))
@@ -108,6 +116,7 @@ time_zero = float(time.time())
 D2 = (message_filters.Subscriber('laser_frame_D2', LaserScan))
 ts = message_filters.ApproximateTimeSynchronizer([D2], 1, 1)
 ts.registerCallback(callback)
+pub_D2_sim = rospy.Publisher('D2_sim', Int32Stamped, queue_size=10)
 print('Writing data to csv file.')
 
 rospy.spin()
