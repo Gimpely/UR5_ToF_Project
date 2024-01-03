@@ -36,6 +36,8 @@ def callback(A1,A2,B1,B2,C1,C2,D1,D2):
     #data_array = [D1,D1,D1,D1,D1,D1,D1,D1]
     chess_arranged_arr = []
 
+    min_values_array = []
+
     for l in range(len(data_array)):
         samples = np.sqrt(np.array(len(data_array[l].ranges), dtype=np.int))
         samples = np.array(samples, dtype=np.int)
@@ -54,13 +56,15 @@ def callback(A1,A2,B1,B2,C1,C2,D1,D2):
             arranged_array = arrange_4_4(samples,array)
             array_min = find_min(samples,arranged_array)
             
-            write_2_csv(min(array_min))
+            #write_2_csv(min(array_min))
             array_min_min = min(array_min)
+            min_values_array.append(array_min_min)
             pubs[sensor_names[l]].publish(array_min_min)
             chess_arranged = np.array(arrange_chess(array_min))
             #print('array:',chess_arranged)
             #talker(chess_arranged)
         else: pass
+    write_2_csv(min_values_array)
     
   
 def mask_outside_circle(data, radius):
@@ -127,7 +131,10 @@ def write_2_csv(data):
     cas = datetime.now()
     with open(rospack.get_path('ur5-joint-position-control')+'/src/src/my_code/lidar_data/lidar_data.csv', 'a') as file:
         writer = csv.writer(file)
-        writer.writerow((cas,data))
+        # Add the timestamp to the start of the data list
+        data.insert(0, cas)
+        # Write the data list to the CSV file
+        writer.writerow(data)
 
 def arrange_chess(data):
     array_min_heat = np.array(np.transpose(np.reshape(data,(4,4))))
