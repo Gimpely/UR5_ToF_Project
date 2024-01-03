@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="ur5-joint-position-control" name="lidar_scan" type="lidar_scan.py"  output="screen"> </node>
+
+</launch>
