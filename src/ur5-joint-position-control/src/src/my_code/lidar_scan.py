@@ -2,6 +2,7 @@
 import numpy as np
 import rospy
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Int32
 #from std_msgs.msg import String Float64MultiArray
 import time
 import csv
@@ -13,14 +14,25 @@ from datetime import datetime
 
 rospack = rospkg.RosPack()
 #pub = rospy.Publisher('/lidar_map', Float64MultiArray, queue_size=10)
-print('Datas are in meters.')
+print('Values in meters.')
 
+pubs = {
+    'A1': rospy.Publisher('sensor/A1', Int32, queue_size=10),
+    'A2': rospy.Publisher('sensor/A2', Int32, queue_size=10),
+    'B1': rospy.Publisher('sensor/B1', Int32, queue_size=10),
+    'B2': rospy.Publisher('sensor/B2', Int32, queue_size=10),
+    'C1': rospy.Publisher('sensor/C1', Int32, queue_size=10),
+    'C2': rospy.Publisher('sensor/C2', Int32, queue_size=10),
+    'D1': rospy.Publisher('sensor/D1', Int32, queue_size=10),
+    'D2': rospy.Publisher('sensor/D2', Int32, queue_size=10),
+}
 
 
 def callback(A1,A2,B1,B2,C1,C2,D1,D2):
     #Goes through all 8 sensors
     #data_array = [A1,A2,B1,B2,C1,C2,D1,D2]
     data_array = [C1,A1,A2,C2,D2,B2,D1,B1]
+    sensor_names = ['C1','A1','A2','C2','D2','B2','D1','B1']
     #data_array = [D1,D1,D1,D1,D1,D1,D1,D1]
     chess_arranged_arr = []
 
@@ -43,6 +55,8 @@ def callback(A1,A2,B1,B2,C1,C2,D1,D2):
             array_min = find_min(samples,arranged_array)
             
             write_2_csv(min(array_min))
+            array_min_min = min(array_min)
+            pubs[sensor_names[l]].publish(array_min_min)
             chess_arranged = np.array(arrange_chess(array_min))
             #print('array:',chess_arranged)
             #talker(chess_arranged)
