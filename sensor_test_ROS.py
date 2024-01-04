@@ -8,6 +8,8 @@ from std_msgs.msg import Int32, Header, Float32
 import csv
 from datetime import datetime
 
+A1, A2, B1, B2, C1, C2, D1, D2 = 0, 0, 0, 0, 0, 0, 0, 0
+
 
 
 def open_serial(port, baudrate=115200):
@@ -34,7 +36,7 @@ def close_serial(ser):
     ser.close()
 
 def write_to_csv(filename, A1, A2, B1, B2, C1, C2, D1, D2):
-    with open(filename, 'a', newline='') as file:
+    with open(filename, 'a') as file:
         writer = csv.writer(file)
         writer.writerow([datetime.now(), A1, A2, B1, B2, C1, C2, D1, D2])
 
@@ -67,7 +69,7 @@ def collect_data(arduino_board_port, arduino_board_number, collect_data):
                 B1 = distance2
                 pub_B1.publish(B1)
                 pub_D1.publish(D1)
-            write_to_csv('data.csv', A1, A2, B1, B2, C1, C2, D1, D2)
+            write_to_csv('sensor_data.csv', A1, A2, B1, B2, C1, C2, D1, D2)
 
     close_serial(ser)
 
