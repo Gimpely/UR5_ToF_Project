@@ -5,6 +5,8 @@ import serial
 import os
 import rospy
 from std_msgs.msg import Int32, Header, Float32
+import csv
+from datetime import datetime
 
 
 
@@ -31,6 +33,11 @@ def read_data(ser):
 def close_serial(ser):
     ser.close()
 
+def write_to_csv(filename, A1, A2, B1, B2, C1, C2, D1, D2):
+    with open(filename, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([datetime.now(), A1, A2, B1, B2, C1, C2, D1, D2])
+
 def collect_data(arduino_board_port, arduino_board_number, collect_data):
     print("Collecting data...")
     global A1, A2, B1, B2, C1, C2, D1, D2
@@ -43,33 +50,24 @@ def collect_data(arduino_board_port, arduino_board_number, collect_data):
             if arduino_board_number == 0: 
                 C1 = distance1
                 A1 = distance2
-                # msg1.data = A1
                 pub_A1.publish(A1)
-                # msg2.data = C1
                 pub_C1.publish(C1)
             if arduino_board_number == 1: 
                 C2 = distance2
                 A2 = distance1
-                C2 = distance2
-                A2 = distance1
-                # msg1.data = A2
                 pub_A2.publish(A2)
-                # msg2.data = C2
                 pub_C2.publish(C2)
             if arduino_board_number == 2: 
                 D2 = distance1
                 B2 = distance2
-                # msg1.data = B2
                 pub_B2.publish(B2)
-                # msg2.data = D2
                 pub_D2.publish(D2)
-            if arduino_board_number == 3: 
+            if arduino_board_number == 3:
                 D1 = distance1
                 B1 = distance2
-                # msg1.data = B1
                 pub_B1.publish(B1)
-                # msg2.data = D1
                 pub_D1.publish(D1)
+            write_to_csv('data.csv', A1, A2, B1, B2, C1, C2, D1, D2)
 
     close_serial(ser)
 
