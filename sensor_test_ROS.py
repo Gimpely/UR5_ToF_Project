@@ -1,9 +1,12 @@
+#!/usr/bin/env python
+
 from threading import Thread
 import serial
 import os
 import rospy
-from std_msgs.msg import Int32, Header
-from sensor_msgs.msg import Int32Stamped
+from std_msgs.msg import Int32, Header, Float32
+
+
 
 def open_serial(port, baudrate=115200):
     ser = serial.Serial()
@@ -35,69 +38,45 @@ def collect_data(arduino_board_port, arduino_board_number, collect_data):
     while True:
         distance1, distance2 = read_data(ser)
         if distance1 is not None and distance2 is not None:
+            distance1 = int(distance1)
+            distance2 = int(distance2)
             if arduino_board_number == 0: 
-                msg1 = Int32Stamped()
-                msg1.header = Header()
-                msg1.header.stamp = rospy.Time.now()
-                msg2 = Int32Stamped()
-                msg2.header = Header()
-                msg2.header.stamp = rospy.Time.now()
                 C1 = distance1
                 A1 = distance2
-                msg1.data = A1
-                pub_A1.publish(msg1)
-                msg2.data = C1
-                pub_C1.publish(msg2)
+                # msg1.data = A1
+                pub_A1.publish(A1)
+                # msg2.data = C1
+                pub_C1.publish(C1)
             if arduino_board_number == 1: 
-                msg1 = Int32Stamped()
-                msg1.header = Header()
-                msg1.header.stamp = rospy.Time.now()
-                msg2 = Int32Stamped()
-                msg2.header = Header()
-                msg2.header.stamp = rospy.Time.now()
                 C2 = distance2
                 A2 = distance1
                 C2 = distance2
                 A2 = distance1
-                msg1.data = A2
-                pub_A2.publish(msg1)
-                msg2.data = C2
-                pub_C2.publish(msg2)
+                # msg1.data = A2
+                pub_A2.publish(A2)
+                # msg2.data = C2
+                pub_C2.publish(C2)
             if arduino_board_number == 2: 
-                msg1 = Int32Stamped()
-                msg1.header = Header()
-                msg1.header.stamp = rospy.Time.now()
-                msg2 = Int32Stamped()
-                msg2.header = Header()
-                msg2.header.stamp = rospy.Time.now()
                 D2 = distance1
                 B2 = distance2
-                D2 = distance1
-                B2 = distance2
-                msg1.data = B2
-                pub_B2.publish(msg1)
-                msg2.data = D2
-                pub_D2.publish(msg2)
+                # msg1.data = B2
+                pub_B2.publish(B2)
+                # msg2.data = D2
+                pub_D2.publish(D2)
             if arduino_board_number == 3: 
-                msg1 = Int32Stamped()
-                msg1.header = Header()
-                msg1.header.stamp = rospy.Time.now()
-                msg2 = Int32Stamped()
-                msg2.header = Header()
-                msg2.header.stamp = rospy.Time.now()
                 D1 = distance1
                 B1 = distance2
-                msg1.data = B1
-                pub_B1.publish(msg1)
-                msg2.data = D1
-                pub_D1.publish(msg2)
+                # msg1.data = B1
+                pub_B1.publish(B1)
+                # msg2.data = D1
+                pub_D1.publish(D1)
 
     close_serial(ser)
 
 
 def main():
     print("Starting....")
-    ARDUINO_BOARD_PORT_ARRAY = ["COM3", "COM4", "COM5", "COM6"]
+    ARDUINO_BOARD_PORT_ARRAY = ["/dev/ttyUSB0","/dev/ttyUSB1","/dev/ttyUSB2","/dev/ttyUSB3" ]
     collect_data_flag = True
     threads = []
     for i, port in enumerate(ARDUINO_BOARD_PORT_ARRAY):
@@ -118,13 +97,13 @@ if __name__ == "__main__":
     rospy.init_node('arduino_data_publisher')
 
     # Create ROS publishers
-    pub_A1 = rospy.Publisher('A1', Int32Stamped, queue_size=10)
-    pub_A2 = rospy.Publisher('A2', Int32Stamped, queue_size=10)
-    pub_B1 = rospy.Publisher('B1', Int32Stamped, queue_size=10)
-    pub_B2 = rospy.Publisher('B2', Int32Stamped, queue_size=10)
-    pub_C1 = rospy.Publisher('C1', Int32Stamped, queue_size=10)
-    pub_C2 = rospy.Publisher('C2', Int32Stamped, queue_size=10)
-    pub_D1 = rospy.Publisher('D1', Int32Stamped, queue_size=10)
-    pub_D2 = rospy.Publisher('D2', Int32Stamped, queue_size=10)
+    pub_A1 = rospy.Publisher('sensor/real/A1', Float32, queue_size=2)
+    pub_A2 = rospy.Publisher('sensor/real/A2', Float32, queue_size=2)
+    pub_B1 = rospy.Publisher('sensor/real/B1', Float32, queue_size=2)
+    pub_B2 = rospy.Publisher('sensor/real/B2', Float32, queue_size=2)
+    pub_C1 = rospy.Publisher('sensor/real/C1', Float32, queue_size=2)
+    pub_C2 = rospy.Publisher('sensor/real/C2', Float32, queue_size=2)
+    pub_D1 = rospy.Publisher('sensor/real/D1', Float32, queue_size=2)
+    pub_D2 = rospy.Publisher('sensor/real/D2', Float32, queue_size=2)
     
     main()
