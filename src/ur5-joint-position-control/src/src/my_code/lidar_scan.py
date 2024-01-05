@@ -2,10 +2,11 @@
 import numpy as np
 import rospy
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Int32
+from std_msgs.msg import Int32, Float32
 #from std_msgs.msg import String Float64MultiArray
 import time
 import csv
+import os
 import message_filters
 import matplotlib.pyplot as plt
 import rospkg 
@@ -17,31 +18,33 @@ rospack = rospkg.RosPack()
 print('Values in meters.')
 
 pubs = {
-    'A1': rospy.Publisher('sensor/A1', Int32, queue_size=10),
-    'A2': rospy.Publisher('sensor/A2', Int32, queue_size=10),
-    'B1': rospy.Publisher('sensor/B1', Int32, queue_size=10),
-    'B2': rospy.Publisher('sensor/B2', Int32, queue_size=10),
-    'C1': rospy.Publisher('sensor/C1', Int32, queue_size=10),
-    'C2': rospy.Publisher('sensor/C2', Int32, queue_size=10),
-    'D1': rospy.Publisher('sensor/D1', Int32, queue_size=10),
-    'D2': rospy.Publisher('sensor/D2', Int32, queue_size=10),
+    'A1': rospy.Publisher('sensor/A1', Float32, queue_size=10),
+    'A2': rospy.Publisher('sensor/A2', Float32, queue_size=10),
+    'B1': rospy.Publisher('sensor/B1', Float32, queue_size=10),
+    'B2': rospy.Publisher('sensor/B2', Float32, queue_size=10),
+    'C1': rospy.Publisher('sensor/C1', Float32, queue_size=10),
+    'C2': rospy.Publisher('sensor/C2', Float32, queue_size=10),
+    'D1': rospy.Publisher('sensor/D1', Float32, queue_size=10),
+    'D2': rospy.Publisher('sensor/D2', Float32, queue_size=10),
 }
 
 
 def callback(A1,A2,B1,B2,C1,C2,D1,D2):
     #Goes through all 8 sensors
-    #data_array = [A1,A2,B1,B2,C1,C2,D1,D2]
-    data_array = [C1,A1,A2,C2,D2,B2,D1,B1]
-    sensor_names = ['C1','A1','A2','C2','D2','B2','D1','B1']
+    data_array = [A1,A2,B1,B2,C1,C2,D1,D2]
+    # data_array = [C1,A1,A2,C2,D2,B2,D1,B1]
+    sensor_names = ['A1','A2','C1','C2','B1','B2','D1','D2']
     #data_array = [D1,D1,D1,D1,D1,D1,D1,D1]
     chess_arranged_arr = []
 
     min_values_array = []
+    check = []
 
     for l in range(len(data_array)):
         samples = np.sqrt(np.array(len(data_array[l].ranges), dtype=np.int))
         samples = np.array(samples, dtype=np.int)
-        
+        # if (l == 3) or (l == 4):
+        #     print("Numa", l, "value", len(data_array[l].ranges), "samples", samples)
         list = []
         array = []
         #Arange data in rows and columns
@@ -57,13 +60,17 @@ def callback(A1,A2,B1,B2,C1,C2,D1,D2):
             array_min = find_min(samples,arranged_array)
             
             #write_2_csv(min(array_min))
-            array_min_min = min(array_min)
+            array_min_min = 1000 * min(array_min)
             min_values_array.append(array_min_min)
+            check.append(l)
             pubs[sensor_names[l]].publish(array_min_min)
             chess_arranged = np.array(arrange_chess(array_min))
             #print('array:',chess_arranged)
             #talker(chess_arranged)
         else: pass
+            # print("Ta ne dela:", l)
+    # print(len(min_values_array))
+    # print("Recorded ones", check)
     write_2_csv(min_values_array)
     
   
@@ -127,10 +134,22 @@ def find_min(samples,data):
     return array_min   
 
 #Write to csv - change name
+# def write_2_csv(data):
+#     cas = datetime.now()
+#     with open(rospack.get_path('ur5-joint-position-control')+'/src/src/my_code/lidar_data/lidar_data.csv', 'a') as file:
+#         writer = csv.writer(file)
+#         # Add the timestamp to the start of the data list
+#         data.insert(0, cas)
+#         # Write the data list to the CSV file
+#         writer.writerow(data)
 def write_2_csv(data):
+    filename = rospack.get_path('ur5-joint-position-control')+'/src/src/my_code/lidar_data/lidar_data.csv'
+    file_exists = os.path.isfile(filename)
     cas = datetime.now()
-    with open(rospack.get_path('ur5-joint-position-control')+'/src/src/my_code/lidar_data/lidar_data.csv', 'a') as file:
+    with open(filename, 'a') as file:
         writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(['Timestamp', 'A1', 'A2', 'C1', 'C2', 'B1', 'B2', 'D1', 'D2'])
         # Add the timestamp to the start of the data list
         data.insert(0, cas)
         # Write the data list to the CSV file
