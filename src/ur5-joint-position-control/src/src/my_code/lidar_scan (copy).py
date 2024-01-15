@@ -18,10 +18,6 @@ rospack = rospkg.RosPack()
 #pub = rospy.Publisher('/lidar_map', Float64MultiArray, queue_size=10)
 print('Values in meters.')
 
-# precompute mask for the mask_outside_circle function
-radius = 13
-y, x = np.ogrid[-radius:radius+1, -radius:radius+1]
-mask = x**2 + y**2 > radius**2 
 pubs = {
     'A1': rospy.Publisher('sensor/A1', Float32, queue_size=10),
     'A2': rospy.Publisher('sensor/A2', Float32, queue_size=10),
@@ -32,6 +28,7 @@ pubs = {
     'D1': rospy.Publisher('sensor/D1', Float32, queue_size=10),
     'D2': rospy.Publisher('sensor/D2', Float32, queue_size=10),
 }
+
 
 def callback(A1,A2,B1,B2,C1,C2,D1,D2):
     #Goes through all 8 sensors
@@ -69,44 +66,46 @@ def callback(A1,A2,B1,B2,C1,C2,D1,D2):
 
     
   
-def mask_outside_circle(data):
-    np.putmask(data, mask, np.inf)
+def mask_outside_circle(data, radius):
+    # Ustvarjanje koordinatne mreze
+    y, x = np.ogrid[-radius:radius+1, -radius:radius+1]
+    
+    # Ustvarjanje maske za vrednosti izven kroga
+    mask = x**2 + y**2 > radius**2
+    
+    # Nastavitev vrednosti izven kroga na inf
+    data[mask] = np.inf
     
     return data  
     
-def arrange_4_4(samples, data):
-    # Reshape the data
+#Arange data in 4x4 windows
+def arrange_4_4(samples,data):
+    # print('data: ',np.size(data))
+    # print('samples: ',(samples))
+
+    # Preoblikovanje podatkov
     data_reshaped = np.reshape(data, (27, 27))
 
-    # Apply the mask to the reshaped data
-    masked_data = mask_outside_circle(data_reshaped)
+    # Uporaba maske na preoblikovanih podatkih
+    masked_data = mask_outside_circle(data_reshaped, 13)
 
-    # Create an empty list to store the arranged data
+
+    # Izris heatmap
+    # plt.figure(figsize=(10,10)) # nastavi velikost slike
+    # plt.imshow(masked_data, cmap='hot', interpolation='nearest')
+    # plt.colorbar() # dodaj barvno skalo
+    # plt.title('Heatmap of arranged data')
+    # plt.show()
     arranged_array = []
-
-    # Calculate the size of the blocks
-    block_size = samples // 4
-
-    # Iterate over the 4x4 grid
     for i in range(4):
-        for j in range(4):
-            # Calculate the start and end indices for the current block
-            start_i = i * block_size
-            end_i = start_i + block_size
-            start_j = j * block_size
-            end_j = start_j + block_size
-
-            # Extract the current block from the masked data
-            block = masked_data[start_i:end_i, start_j:end_j]
-
-            # Flatten the block and append it to the arranged array
-            arranged_array.append(block.flatten())
-
-    # Convert the list of arrays into a single 1D array
-    arranged_array = np.concatenate(arranged_array)
-
+        for m in range(4):
+            for k in range((samples/4)*m,m*samples/4+samples/4):
+                for l in range((samples/4)*i,i*samples/4+samples/4):
+                    #print("K: ",k,"L: ",l)
+                    arranged_array.append(masked_data[l][k])
+    #print('arranged data',np.size(arranged_array))
     return arranged_array
-
+    
                 
 #Find min values in all 16 squares
 def find_min(samples,data):
