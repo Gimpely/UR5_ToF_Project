@@ -750,17 +750,17 @@
   <!-- box -->
     <link name="box">
         <inertial>
-            <origin xyz="0.0 0.0 0.0" />
-            <!-- <origin xyz="0.01 0 -0.45" /> -->
+            <!-- <origin xyz="-0.5 0.5 0.075" /> -->
+            <origin xyz="0.01 0 -0.45" />
             <mass value="1.0" />
             <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="100.0"  iyz="0.0"  izz="1.0" />
         </inertial> 
         <visual>
-            <origin xyz="0.0 0.0 0.0" />
-            <!-- <origin xyz="0.01 0 -0.45" /> -->
+            <!-- <origin xyz="-0.5 0.5 0.075" /> -->
+            <origin xyz="0.01 0 -0.45" />
             <geometry>
-                <box size="0.15 0.15 0.15"/>
-                <!-- <mesh filename="package://ur5-joint-position-control/urdf/tekociTrak.STL" scale="1 1 1"/> -->
+                <!-- <box size="0.15 0.15 0.15"/> -->
+                <mesh filename="package://ur5-joint-position-control/urdf/tekociTrak.STL" scale="1 1 1"/>
             </geometry>
             <material name="red"/>
         </visual>  
@@ -773,19 +773,19 @@
               </ode>
             </contact>
           </surface>
-            <origin xyz="0.0 0.0 0.0" />
-            <!-- <origin xyz="0.01 0 -0.45" /> -->
+            <!-- <origin xyz="-0.5 0.5 0.075" /> -->
+            <origin xyz="0.01 0 -0.45" />
             <geometry>
-                <!-- <mesh filename="package://ur5-joint-position-control/urdf/tekociTrak.STL" scale="1 1 1"/> -->
-                <box size="0.15 0.15 0.15"/>
+                <mesh filename="package://ur5-joint-position-control/urdf/tekociTrak.STL" scale="1 1 1"/>
+                <!-- <box size="0.15 0.15 0.15"/> -->
             </geometry>
         </collision>   
     </link>
-    
     <joint name="box_joint" type="fixed">
-      <parent link="world"/>
-      <child link="box"/>
-      <origin rpy="0 0 0" xyz="-0.492 0.132 0.075"/> <!-- Raise the box slightly above the floor -->
+        <parent link="world"/>
+        <child link="box"/>
+        <!-- TODO: check base_link name of robot -->
+        <origin rpy="1.5707963268 0.0 3.1415926536" xyz="0.0 0.0 0.0"/>
     </joint>
 
     <!-- define the ur5's position and orientation in the world coordinate system -->
