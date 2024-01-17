@@ -3,6 +3,8 @@
   - `catkin_make` 
   - `source devel/setup.bash`
   - `cd src/ur5-joint-position-control/src/src/my_code`
+or
+  - `cd src/tof_project/scripts`
   - `./bringup.sh`
 
 # 1. UR5 Robot Digital Twin Documentation
