@@ -1,6 +1,5 @@
 # Running the script:
-BZqyo9w7zeAzRMuGgQb+tqC20n0uMyKt4zDKs5DgTks=
-desk.robolab.si
+
   - `rm -rf build devel`
   - `catkin_make` 
   - `source devel/setup.bash`
